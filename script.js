@@ -12,6 +12,11 @@ let expr = "";
 let oprlist = [];
 
 
+function isOperator(el){
+    return oprlist.includes(el); 
+}
+
+
 const add = function(a , b){
     return a + b; 
 }
@@ -63,7 +68,7 @@ numList.forEach(
 
             let lastInserted = expr[expr.length - 1]; 
 
-            if(oprlist.includes(lastInserted)){
+            if(isOperator(lastInserted)){
                 display.textContent ="";
             }
             display.textContent += e.target.textContent;
@@ -93,7 +98,7 @@ operatorList.forEach((element)=>
         display.textContent = ""; 
         display.textContent += e.target.textContent;
         let lastInserted = expr[expr.length - 1]; 
-        if(oprlist.includes(lastInserted)){
+        if(isOperator(lastInserted)){
 
             expr = expr.replace(lastInserted , e.target.textContent);
             
@@ -118,50 +123,62 @@ operatorList.forEach((element)=>
 calculate.addEventListener("click" , calcuateExpr);
 
 
+
 function calcuateExpr(){
 
+    let num1 = "";
+    let num2 = ""; 
+    let operator = "";
 
-    let valid = false; 
+    let i = 0 ; 
+    if(expr[i] === "-"){
+        num1 += expr[i++];
+    }
+    while(i < expr.length && !isOperator(expr[i])){
 
-    let operatorsIn = [];
+        num1 += expr[i++];
 
-    oprlist.forEach(
-        (element)=>  {
-            if(expr.includes(element)){
+    }
+    if( i < expr.length){
 
-                valid = true;
-                operatorsIn.push(element);
-            }
-        }
-    );
-    if(valid == false || operatorsIn.length > 1){
+        operator = expr[i++]; 
+    }
 
-        display.textContent = "Invalid Syntax"; 
+
+
+    while(i < expr.length && !isOperator(expr[i])){
+
+        num2 += expr[i++]; 
+    }
+
+    // Check validity. 
+
+/*     if(num1.length === 0 || num2.length === 0 || !isOperator(operator)){
+
         
 
-    }
-
-    else{
-
-        let index = expr.indexOf(operatorsIn[0]); 
-
+    } */
     
 
-        let num1 = Number(expr.substring(0 , index));
+        num1 = Number(num1);
+        num2 = Number(num2); 
 
-     
-        console.log(num1);
-        let num2 = Number(expr.substring(index + 1,));
-        console.log(num2);
+        operate(num1 , num2 , operator); 
 
-        operate(num1 , num2 , operatorsIn[0]);
+        expr = expr.substring(i); 
 
-
+        expr = display.textContent + expr; 
 
 
 
-    }
-    expr = "";
+
+
+
+
+
+
+  
+
 
 
     
